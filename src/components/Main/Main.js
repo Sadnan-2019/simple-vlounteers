@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import useVolenteers from "../../hooks/useVolunteers";
 import Activity from "../Activity/Activity";
+import Volenteers from "../Volenteers/Volenteers";
 import './Main.css'
 
 const Main = () => {
@@ -11,20 +12,35 @@ const Main = () => {
   //     .then((data) => setVolenteers(data));
   // }, []);
 
-  const [volenteers] = useVolenteers();
+  // const [volenteers] = useVolenteers();
+  const [searchText,setSearhText] =useState('')
   const [searchResult,setResult] = useState([]);
 
   const handleSearch=(event)=> {
 
-    const searchText=(event.target.value)
-    const match=volenteers.filter(volenteer=>volenteer.name.includes(searchText))
-    setResult(match)
+    // const searchText=(event.target.value)
+    // const match=volenteers.filter(volenteer=>volenteer.name.includes(searchText))
+    // setResult(match)
+    setSearhText(event.target.value);
+
 
   }
+  useEffect(()=>{
+
+    console.log("inside the usee effect")
+    fetch(`data.json`)
+    .then(res =>res.json())
+    .then(data =>{
+      const match=data.filter(volenteer=>volenteer.name.includes(searchText));
+      setResult(match)
+
+
+    })
+  },[searchText])
 
   return (
     <div className="container App">
-      <h3>This is :{volenteers.length}</h3>
+      <h3>This is :{searchResult.length}</h3>
       <div className="m-4">
         <input onChange={handleSearch}  type="text" className="rounded-lg-2" placeholder="Search"/>
       </div>
